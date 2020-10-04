@@ -1,16 +1,13 @@
-library('data.table')
-library('dplyr')
-library('tidyverse')
-library('lubridate')
-library('recommenderlab')
-library('stringr')
+
 #-----------------------------------------------
 # 1. Read the Synthetic tag data file for assessment data
 #-----------------------------------------------
 
+ipassessmentdata = FOR_PS
+
 # ==> Commenting for Upskill Evaluation 
         #test = load(file = "C:/Divya/NUS Course Materials/FYP/SampleCode/SecondDataSet/assessments_with_tags.RData")
-        df = melt(ASSES_PS_EVAL_GB_28, id.vars = c("question_id","country","org_id","role_id","submission_utc_ts","no_of_trials","points_earned","masked_user_id"))
+        df = melt(ipassessmentdata, id.vars = c("question_id","country","org_id","role_id","submission_utc_ts","no_of_trials","points_earned","masked_user_id"))
         names(df)[10] = "question_tags"
         df = within(df, rm("variable"))
         # original KUSHAL question activity data set
@@ -85,7 +82,9 @@ for(y in 1:nrow(df_tag_fullset)) {
 country_list = unique(dt_dump[,country])
 country_list = country_list[!is.na(country_list)]
 country_list = country_list[country_list != ""]
-file_path = "~/wls26092020/wls26092020/Data/pulse_score_GB_28.csv"
+csvFileName <- paste("~/wls26092020/wls26092020/Data/pulsescore/pulse_score_",recDate,".csv")
+file_path = csvFileName
+#file_path = "C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/wls20092020/Data/Day1/pulse_score_Day1_tr.csv"
 for (c in country_list) {
   c = trimws(c, which = c("both"))
   print(paste("Start of Processing: " , c, "...."))
@@ -152,79 +151,3 @@ for (c in country_list) {
   print(paste("End of Processing: ", c))
   print(paste("----------------------------------------------"))
 }
-
-rm(df,df_expanded_tag_set,df_final_ps_score_set, df_ps_comp_set, df_question_diff_level, df_tag_fullset, df_tag_penalty_set,dt_cntry_full_data,dt_correct_ans, dt_dump,dt_final_user_ques_set)
-rm(dt_tag_fullset,gb,kSet,penalty_map,tag_set,bands,c,cntDataSet,i,k,kValues,lvl,partitions,penalty_set,scaleValue,tag,x,y,z)
-#-----------------------------------------------------------------
-# UPSKILL RECOMMENDER
-#-----------------------------------------------------------------
-#===>
-    # df_final_ps_score_set %>%
-    #   filter(score<=0) %>%
-    #   count()
-    # 
-    # min(df_final_ps_score_set$score)
-    # max(df_final_ps_score_set$score)
-    # 
-    # v_users = unique(df_final_ps_score_set$masked_user_id)
-    # length(v_users)
-    # #1396 users
-    # df_users = data.frame(v_users, c(1:length(v_users)))
-    # colnames(df_users) = c("masked_user_id","user_id")
-    # v_tags = unique(df_final_ps_score_set$question_tags)
-    # length(v_tags)
-    # #379 tags
-    # df_items = data.frame(v_tags, c(1:length(v_tags)))
-    # colnames(df_items) = c("question_tags","item_id")
-    # 
-    # total_users_cnt = length(unique(df_final_ps_score_set$masked_user_id))
-    # test_users_cnt = round(0.1 * total_users_cnt,0)
-    # train_users_cnt = total_users_cnt - test_users_cnt
-    # v_test_users = tail(v_users,test_users_cnt)
-    # v_train_users = tail(v_users,train_users_cnt)
-    # 
-    # df_train_set = df_final_ps_score_set[df_final_ps_score_set$masked_user_id %in% v_train_users,]
-    # df_train_set = merge(df_train_set, df_users, by="masked_user_id", all = TRUE)
-    # df_train_set = merge(df_train_set, df_items, by="question_tags", all = TRUE)
-    # df_train_set = na.omit(df_train_set)
-    # dim(df_train_set)
-    # # 65725
-    # df_test_set = df_final_ps_score_set[df_final_ps_score_set$masked_user_id %in% v_test_users,]
-    # df_test_set = merge(df_test_set, df_users, by="masked_user_id", all = TRUE)
-    # df_test_set = merge(df_test_set, df_items, by="question_tags", all = TRUE)
-    # df_test_set = na.omit(df_test_set)
-    # dim(df_test_set)
-    # #2537
-    # 
-    # #-----------------------------------------------------------------
-    # # Recosystem - Matrix Factorization
-    # #-----------------------------------------------------------------
-    # library(recosystem)
-    # set.seed(123)
-    # 
-    # train_data = data_memory(df_train_set$user_id, df_train_set$item_id, df_train_set$score)
-    # test_data = data_memory(df_test_set$user_id, df_test_set$item_id)
-    # r = Reco()
-    # model = r$tune(train_data = train_data, opts = list(dim = c(10,20,30),
-    #                                                     lrate = c(0.1,0.2),
-    #                                                     costp_l1 = 0,
-    #                                                     costq_l1 = 0,
-    #                                                     nthread = 1,
-    #                                                     niter = 10))
-    # model
-    # r$train(train_data, opts = c(model$min, nthread = 1, niter = 10))
-    # pred_file = tempfile()
-    # pred_score = r$predict(test_data = test_data, out_memory())
-    # 
-    # df_eval_test_set = cbind(df_test_set, pred_score)
-    # #diff between original and predicted
-    # df_eval_test_set$sq_err = (df_eval_test_set$score - df_eval_test_set$pred_score)**2
-    # total_error = sqrt(sum(df_eval_test_set$sq_err))
-    # # error = 0.6111
-    # 
-    # recomm_tags = df_eval_test_set %>%
-    #   arrange(desc(pred_score)) %>%
-    #   group_by(masked_user_id) %>%
-    #   slice(1:5)
-    # 
-    # write.csv(recomm_tags, "C:/Divya/NUS Course Materials/FYP/SampleCode/SecondDataSet/output/upskill_recommendations.csv")

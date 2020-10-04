@@ -28,3 +28,39 @@ showCM = function(preds, like) {
   cat(sprintf("precision = %3.1f%%\n",s[1]*100/(s[1]+s[2])))
   cat(sprintf("recall    = %3.1f%%\n",s[1]*100/(s[1]+s[4])))
 }
+
+#Creating a Negative Filter
+'%notin%' <- Negate('%in%')
+
+##Function to create Data for Recommendations 
+create_activity_data_from_recomm_questions = function(x,recDate) {
+  print(paste0("Inside create activity data from recomm questions function "))
+  df = data.table(x)
+  recomm_size = nrow(df)
+  print(paste0("Recomm questions size = ", recomm_size))
+  print(paste0("Col names = ", colnames(df)))
+  country = rep("GB",recomm_size)
+  org_id = rep(28, recomm_size)
+  role_id =  rep(1,recomm_size)
+  datetime_val = recDate#rep("2020-05-03 00:00:00",recomm_size)
+  trials = rep(1,recomm_size)
+  points = rep(10,recomm_size)
+  
+  
+  
+  df[,"org_id" := 28]
+  df[,"role_id" := 1] 
+  df[,"country"]<- country
+  df[,"points_earned" := 10]
+  df[,"no_of_trials" := 1]
+  df[,"submission_utc_ts" := recDate]
+  df[,"tag2" := " "]
+  df[,"tag3" := " "]
+  df[,"tag4" := " "]
+  df[,"tag5" := " "]
+  df[,"tag6" := " "]
+  df[,"tag7" := " "]
+  print(paste0("SYNTHETIC activity data set size = ",nrow(df)))
+  print(paste0("Col names = ", colnames(df)))
+  return(df)
+}

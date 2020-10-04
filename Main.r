@@ -16,7 +16,7 @@
   library(tidyverse)
   library(data.table)
   library(dplyr)
-  library(reshape)
+  library(reshape2)
   library(recommenderlab)
   library(devtools)
   library(lubridate)
@@ -38,8 +38,9 @@
   
 # Reading in the Master files from TeamStreamz
   # Date File Location 
-  #setwd("~/Documents/NUS_EBAC/Data") # data location of Mac
-  setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/wls20092020/Data") # location in Lenovo
+  setwd("~/Documents/NUS_EBAC/Data") # data location of Mac
+  setwd("~/wls26092020/wls26092020/Data/Day1") # data location of Mac
+  #setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/wls20092020/Data") # location in Lenovo
   
 
 ## Reading in the full set of Data ==>
@@ -69,20 +70,22 @@
 ## End of Reading in Data 
     
   #save.image("Base_DS_after_Filereads.RData")
-  #load("Base_DS_after_Filereads.RData")
+  load("Base_DS_after_Filereads.RData")
   # ==> RM to 2009 RDATA
-  load("workspace_23092020.RData")
+  rm(pulsescore_Master_GB,pulsescore_Master_All)
+  save.image("workspace_29092020.RData")
+  load("workspace_29092020.RData")
   
 ## Running the Serialization Code for Attaching Tags into Views Data
   # Coming back into current WD 
-  #setwd("~/wls")
-  setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/wls20092020")
+  setwd("~/wls26092020/wls26092020/")
+  #setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/wls26092020")
   
   # Sourcing the Underlying Functions 
   source("Code/underlyingfunctions.R")
   
   # Sourcing the Tagged Deck/ Views data set with Serialized Tags 
-  source("Code/asses_view_seareaz.R")
+  #source("Code/asses_view_seareaz.R")
   
   # Sourcing and running the 
   source("Code/users_questions_marks_assessment_viewed.R")
@@ -104,6 +107,7 @@
   
             # # Demo Users FOR GUI 
             # Demo_Users = c("97d0a65c","b1459d23","c80bffb2","c930cc66","f10f490e","f810564e")
+            Demo_UsersDay0 = c("fe5e359d","abd51bd2","9bffe329","8f7b79fd","8100aef3","560d7304","4ffee38a","22408aad","108ae76d","035f412b")
             # 
             # # setting WD back to Project Data Location 
             # #setwd("~/wls/Data")

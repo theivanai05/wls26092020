@@ -71,7 +71,7 @@ setorder(Questions_Recommended_w_qns_ans_GB_Users, masked_user_id,question_id,-q
 ## making Stream view Master long again : 
 
     ## Creating the Question, COuntry, Tag Master
-    C_S_Tag_M = unique(views_sear_tags_dt %>% select("country","deck_id","question_tags.1","question_tags.2","question_tags.3","question_tags.4"))
+    C_S_Tag_M = unique(views_dt_7 %>% select("country","deck_id","tag1","tag2","tag3","tag4","tag5","tag6","tag7"))
 
     ## Reshaping and creating a Long Strewam Tag Master table 
     C_S_Tag_M<- melt(C_S_Tag_M, id=c("country","deck_id"))              # long format
@@ -87,19 +87,19 @@ setorder(Questions_Recommended_w_qns_ans_GB_Users, masked_user_id,question_id,-q
 # Creating Recommended Stream output
     
     ## After Recommendation, need to pull out the Streams now: 
-    Streams_Recommended = merge(C_S_Tag_M, Recommended_Recolabs_Tag, by= c("question_tags"),allow.cartesian=TRUE)
+    Streams_Recommended = merge(C_S_Tag_M, Recommended_Tags_Day4, by= c("question_tags"),allow.cartesian=TRUE)
     
     ## Merging with u_q_t_m to find out which of the questions recommended have already been answered by users 
     Streams_Recommended_w_views = unique(merge(Streams_Recommended,u_d_a_M,  by= c("masked_user_id","deck_id"),all.x = TRUE))
     Streams_Recommended_w_views[,c("action")] <- NULL
     Streams_Recommended_w_views = unique(Streams_Recommended_w_views)
     
-    filter(u_d_a_M, completed == "1")
-    filter(pulsescore_Master_GB, score != "0")
+    #filter(u_d_a_M, completed == "1")
+    #filter(pulsescore_Master_GB, score != "0")
     Streams_Recommended_w_views_GB_Users = filter(Streams_Recommended_w_views, country == "GB")
     setorder(Streams_Recommended_w_views_GB_Users, masked_user_id,deck_id,-completed)
     
     
     #finding Qns and Streams Recommended for Users 
-    filter(Streams_Recommended_w_views_GB_Users, masked_user_id == "019d90f6")
-    filter(Questions_Recommended_w_qns_ans_GB_Users, masked_user_id == "019d90f6")
+    filter(Streams_Recommended_w_views_GB_Users, masked_user_id == "035f412b")
+    filter(Questions_Recommended_w_qns_ans_GB_Users, masked_user_id == "035f412b")

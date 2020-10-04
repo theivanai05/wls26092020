@@ -1,6 +1,4 @@
 # Identifying  the set of Questions and Decks Viewed and Not Viewed by Users : 
-
-
 # assessment data set explanation 
 # Trail 1 = 10 marks 
 # Trail 2 = 5 marks 
@@ -16,7 +14,6 @@ u_q_t_M[,(new_var):=dplyr::case_when(
   qns_ans = points_earned == 10 ~ 1,
   qns_ans = points_earned == 5 ~ 1,
   qns_ans = points_earned == 0 ~ 0)]
-
 
 ####2)  To Create the Matrix for Streams Viewed by Users D.T = u_d_a_M
 
